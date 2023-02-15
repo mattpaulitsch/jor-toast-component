@@ -4,38 +4,11 @@ import Button from "../Button";
 
 import styles from "./ToastPlayground.module.css";
 import ToastShelf from "../ToastShelf";
-
-const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
-const DEFAULT_VARIANT = VARIANT_OPTIONS[0];
-
-class ToastData {
-  constructor(variant, message, id) {
-    this.variant = variant;
-    this.message = message;
-    this.id = id;
-  }
-}
+import { ToastContext, VARIANT_OPTIONS } from "../ToastProvider";
 
 function ToastPlayground() {
-  const [variant, setVariant] = React.useState(DEFAULT_VARIANT);
-  const [message, setMessage] = React.useState("");
-  // const [isVisible, setIsVisible] = React.useState(true);
-  const [toasts, setToasts] = React.useState([]);
-
-  function addNewToast(event) {
-    // prevent default event behavior (page reload)
-    event.preventDefault();
-
-    const newToast = new ToastData(variant, message, crypto.randomUUID());
-
-    // update toast list state
-    const nextToasts = [...toasts, newToast];
-    setToasts(nextToasts);
-
-    // clear message input field and reset radio input to default
-    setMessage("");
-    setVariant(DEFAULT_VARIANT);
-  }
+  const { message, setMessage, variant, setVariant, addNewToast } =
+    React.useContext(ToastContext);
 
   return (
     <div className={styles.wrapper}>
@@ -44,7 +17,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf toasts={toasts} setToasts={setToasts} />
+      <ToastShelf />
 
       <form className={styles.controlsWrapper} onSubmit={addNewToast}>
         <div className={styles.row}>
@@ -87,7 +60,6 @@ function ToastPlayground() {
                 </label>
               );
             })}
-            {/* TODO Other Variant radio buttons here */}
           </div>
         </div>
 

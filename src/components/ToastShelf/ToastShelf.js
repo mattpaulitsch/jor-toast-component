@@ -2,15 +2,10 @@ import React from "react";
 
 import Toast from "../Toast";
 import styles from "./ToastShelf.module.css";
+import { ToastContext } from "../ToastProvider";
 
-function ToastShelf({ toasts, setToasts }) {
-  function handleDelete(key) {
-    const nextToasts = toasts.filter((toast) => {
-      return toast.id !== key;
-    });
-
-    setToasts(nextToasts);
-  }
+function ToastShelf() {
+  const { toasts, deleteToast } = React.useContext(ToastContext);
 
   return (
     <ol className={styles.wrapper}>
@@ -20,9 +15,8 @@ function ToastShelf({ toasts, setToasts }) {
             <Toast
               variant={variant}
               removeToast={() => {
-                handleDelete(id);
+                deleteToast(id);
               }}
-              id={id}
             >
               {message}
             </Toast>
