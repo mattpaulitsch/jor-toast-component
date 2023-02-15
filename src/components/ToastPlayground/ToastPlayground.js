@@ -1,6 +1,5 @@
 import React from "react";
 
-import Toast from "../Toast";
 import Button from "../Button";
 
 import styles from "./ToastPlayground.module.css";
@@ -9,45 +8,28 @@ import ToastShelf from "../ToastShelf";
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 const DEFAULT_VARIANT = VARIANT_OPTIONS[0];
 
+class ToastData {
+  constructor(variant, message, id) {
+    this.variant = variant;
+    this.message = message;
+    this.id = id;
+  }
+}
+
 function ToastPlayground() {
   const [variant, setVariant] = React.useState(DEFAULT_VARIANT);
   const [message, setMessage] = React.useState("");
   // const [isVisible, setIsVisible] = React.useState(true);
   const [toasts, setToasts] = React.useState([]);
 
-  function handleDelete(id) {
-    console.log('id', id);
-    console.log('before', toasts);
-
-    const nextToasts = toasts.filter(toast => {
-      return toast.key !== id;
-    });
-
-
-    // const studentsWhoPassed = students.filter(student => {
-    //   return student.grade >= 60
-    // });
-    console.log('after', nextToasts);
-
-    setToasts(nextToasts);
-  }
-
   function addNewToast(event) {
     // prevent default event behavior (page reload)
     event.preventDefault();
 
-    const key = crypto.randomUUID();
-    const toastContainer = {
-      element: (
-        <Toast variant={variant} removeToast={() => {handleDelete(key)}} id={key}>
-          {message}
-        </Toast>
-      ),
-      key: key,
-    };
+    const newToast = new ToastData(variant, message, crypto.randomUUID());
 
     // update toast list state
-    const nextToasts = [...toasts, toastContainer]
+    const nextToasts = [...toasts, newToast];
     setToasts(nextToasts);
 
     // clear message input field and reset radio input to default
@@ -62,7 +44,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf toasts={toasts} />
+      <ToastShelf toasts={toasts} setToasts={setToasts} />
 
       <form className={styles.controlsWrapper} onSubmit={addNewToast}>
         <div className={styles.row}>
