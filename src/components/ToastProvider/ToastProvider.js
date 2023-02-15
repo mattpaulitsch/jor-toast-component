@@ -16,6 +16,17 @@ function ToastProvider({ children }) {
   const [variant, setVariant] = React.useState(DEFAULT_VARIANT);
   const [message, setMessage] = React.useState("");
   const [toasts, setToasts] = React.useState([]);
+  React.useEffect(() => {
+    window.addEventListener("keydown", deleteAllToasts);
+
+    return () => window.removeEventListener("keydown", deleteAllToasts);
+  });
+
+  function deleteAllToasts(event) {
+    if (event.key === 'Escape') {
+      setToasts([]);
+    }
+  }
 
   function addNewToast(event) {
     // prevent default event behavior (page reload)
@@ -42,7 +53,16 @@ function ToastProvider({ children }) {
 
   return (
     <ToastContext.Provider
-      value={{ variant, setVariant, message, setMessage, toasts, setToasts, addNewToast, deleteToast }}
+      value={{
+        variant,
+        setVariant,
+        message,
+        setMessage,
+        toasts,
+        setToasts,
+        addNewToast,
+        deleteToast,
+      }}
     >
       {children}
     </ToastContext.Provider>
