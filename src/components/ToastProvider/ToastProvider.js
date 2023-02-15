@@ -17,11 +17,15 @@ function ToastProvider({ children }) {
   const [variant, setVariant] = React.useState(DEFAULT_VARIANT);
   const [message, setMessage] = React.useState("");
   const [toasts, setToasts] = React.useState([]);
-  const escapeKey = useEscapeKey('Escape', deleteAllToasts);
 
-  function deleteAllToasts() {
+  const deleteAll = React.useCallback(() => {
     setToasts([]);
-  }
+  })
+  const escapeKey = useEscapeKey('Escape', deleteAll);
+
+  // function deleteAllToasts() {
+  //   setToasts([]);
+  // }
 
   function addNewToast(event) {
     // prevent default event behavior (page reload)

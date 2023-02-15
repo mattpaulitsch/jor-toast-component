@@ -10,5 +10,5 @@ export function useEscapeKey(keyType, actionOnEscape) {
     window.addEventListener("keydown", applyAction);
 
     return () => window.removeEventListener("keydown", applyAction);
-  });
+  }, [keyType, actionOnEscape]);
 }
