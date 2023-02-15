@@ -4,6 +4,7 @@ import Toast from "../Toast";
 import Button from "../Button";
 
 import styles from "./ToastPlayground.module.css";
+import ToastShelf from "../ToastShelf";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 const DEFAULT_VARIANT = VARIANT_OPTIONS[0];
@@ -11,7 +12,48 @@ const DEFAULT_VARIANT = VARIANT_OPTIONS[0];
 function ToastPlayground() {
   const [variant, setVariant] = React.useState(DEFAULT_VARIANT);
   const [message, setMessage] = React.useState("");
-  const [isVisible, setIsVisible] = React.useState(true);
+  // const [isVisible, setIsVisible] = React.useState(true);
+  const [toasts, setToasts] = React.useState([]);
+
+  function handleDelete(id) {
+    console.log('id', id);
+    console.log('before', toasts);
+
+    const nextToasts = toasts.filter(toast => {
+      return toast.key !== id;
+    });
+
+
+    // const studentsWhoPassed = students.filter(student => {
+    //   return student.grade >= 60
+    // });
+    console.log('after', nextToasts);
+
+    setToasts(nextToasts);
+  }
+
+  function addNewToast(event) {
+    // prevent default event behavior (page reload)
+    event.preventDefault();
+
+    const key = crypto.randomUUID();
+    const toastContainer = {
+      element: (
+        <Toast variant={variant} removeToast={() => {handleDelete(key)}} id={key}>
+          {message}
+        </Toast>
+      ),
+      key: key,
+    };
+
+    // update toast list state
+    const nextToasts = [...toasts, toastContainer]
+    setToasts(nextToasts);
+
+    // clear message input field and reset radio input to default
+    setMessage("");
+    setVariant(DEFAULT_VARIANT);
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -20,8 +62,9 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <Toast variant={variant} message={message} isVisible={isVisible} setIsVisible={setIsVisible} />
-      <div className={styles.controlsWrapper}>
+      <ToastShelf toasts={toasts} />
+
+      <form className={styles.controlsWrapper} onSubmit={addNewToast}>
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -69,10 +112,10 @@ function ToastPlayground() {
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button onClick={() => setIsVisible(true)}>Pop Toast!</Button>
+            <Button type="submit">Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
