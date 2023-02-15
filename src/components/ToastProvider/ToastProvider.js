@@ -1,4 +1,5 @@
 import React from "react";
+import { useEscapeKey } from "../../hooks/use-escape-key";
 
 export const ToastContext = React.createContext();
 export const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
@@ -16,16 +17,10 @@ function ToastProvider({ children }) {
   const [variant, setVariant] = React.useState(DEFAULT_VARIANT);
   const [message, setMessage] = React.useState("");
   const [toasts, setToasts] = React.useState([]);
-  React.useEffect(() => {
-    window.addEventListener("keydown", deleteAllToasts);
+  const escapeKey = useEscapeKey('Escape', deleteAllToasts);
 
-    return () => window.removeEventListener("keydown", deleteAllToasts);
-  });
-
-  function deleteAllToasts(event) {
-    if (event.key === 'Escape') {
-      setToasts([]);
-    }
+  function deleteAllToasts() {
+    setToasts([]);
   }
 
   function addNewToast(event) {
